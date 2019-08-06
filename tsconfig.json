@@ -20,6 +20,6 @@
     "jsx": "preserve"
   },
   "include": [
-    "src", "index.d.ts", "src/theme.ts"
+    "src/**/*", "index.d.ts", "src/theme.ts"
   ]
 }

@@ -1,20 +1,32 @@
-import React, { useState } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import logo from './logo.svg';
-import './App.scss';
-import styled, { ThemeProvider } from 'styled-components';
-import { AppTheme } from './theme';
-import { useAsyncEffect } from './hooks/asyncEffect';
-import Posts from './components/PostItem';
-import { Post } from './models/Post';
+import React from 'react'
+import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
+import { Helmet } from "react-helmet"
+import { Box } from 'rebass'
 
-const Root = styled.div`
-  text-align: center;
+import Events from './components/events/Events'
+import { AppTheme } from './theme'
+import Logo from './components/shared/Logo'
+import Title from './components/shared/Title'
+import SubTitle from './components/shared/SubTitle'
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    font-family: 'Lato', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: ${props => (props.theme.colors.background)};
+    color: ${props => (props.theme.colors.black)};
+  }
 `
+
+const Root = (props: any) => <Box {...props} sx={{}} />
+
+
 const Header = styled.header`
-  color: ${props => props.theme.colors.main}
-  background-color: #282c34;
-  min-height: 100vh;
+  color: ${props => props.theme.colors.black}
+  // background-color: #282c34;
+  min-height: 40vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -23,27 +35,29 @@ const Header = styled.header`
 `
 
 const App: React.FC = () => {
-  const [posts, setData] = useState<Post[]>([])
 
-  useAsyncEffect(async () => {
-    const { data }: AxiosResponse = await axios('http://localhost:3001/posts')
-
-    setData(data)
-  })
 
   return (
     <ThemeProvider theme={AppTheme}>
       <Root>
+        <GlobalStyle />
+        <Helmet>
+          <link
+            href="https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Mono:400,500,700&display=swap"
+            rel="stylesheet"
+          />
+        </Helmet>
         <Header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-          <Posts posts={posts} />
+          <Logo />
+          <Title />
+          <SubTitle />
         </Header>
+        <Box>
+          <Events />
+        </Box>
       </Root>
     </ThemeProvider>
-  );
+  )
 }
 
 export default App;
