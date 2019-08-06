@@ -6,16 +6,16 @@ import { Image } from 'rebass';
 
 const rotate = keyframes`
   from {
-    transform: rotate(0deg);
+    transform: rotateY(0);
   }
 
   to {
-    transform: rotate(360deg);
+    transform: rotateY(-360deg);
   }
 `;
 
 const AppLogo = styled(Image)`
-    animation: ${rotate} infinite 20s linear;
+    animation: ${rotate} infinite 5s linear;
     pointer-events: none;
 `
 
