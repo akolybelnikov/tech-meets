@@ -4,7 +4,7 @@ import { Button as PrimaryButton } from 'rebass'
 
 const Button = (props: any) => {
 
-    return <PrimaryButton sx={{fontWeight: 500, fontFamily: 'Lato, sans-serif'}} {...props} />
+    return <PrimaryButton sx={{ fontFamily: 'Lato, sans-serif' }} {...props} />
 }
 
 export default withTheme(Button)

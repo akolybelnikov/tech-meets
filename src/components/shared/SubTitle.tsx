@@ -5,6 +5,6 @@ const SubTitle = (props: any) =>
     <Heading
         {...props}
         sx={{ fontFamily: 'Roboto Mono, monospace' }}
-        fontSize={[2, 3]} />
+        fontSize={[1, 2]} />
 
 export default SubTitle

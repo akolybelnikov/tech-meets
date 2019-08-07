@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box } from 'rebass';
+import { withTheme } from 'styled-components';
 
 const Container = (props: any) => <Box {...props} />
 
-export { Container }
+export default withTheme(Container)

@@ -34,6 +34,18 @@ const AppTheme: DefaultTheme = {
         backgroundColor: darkBlue,
       },
     },
+    primaryInverted: {
+      color: '#fff',
+      backgroundColor: darkBlue,
+      cursor: 'pointer',
+      border: `2px solid ${darkBlue}`,
+      borderRadius: 0,
+      fontWeight: 700,
+      '&:hover': {
+        color: darkBlue,
+        backgroundColor: 'transparent',
+      },
+    },
     secondary: {
       color: darkGreen,
       backgroundColor: 'transparent',
@@ -43,6 +55,17 @@ const AppTheme: DefaultTheme = {
       '&:hover': {
         color: '#fff',
         backgroundColor: darkGreen,
+      },
+    },
+    secondaryInverted: {
+      color: '#fff',
+      backgroundColor: darkGreen,
+      cursor: 'pointer',
+      border: `2px solid ${darkBlue}`,
+      borderRadius: 0,
+      '&:hover': {
+        color: darkGreen,
+        backgroundColor: 'transparent',
       },
     },
   },

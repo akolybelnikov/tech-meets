@@ -26,7 +26,24 @@ declare module 'styled-components' {
         borderRadius: number
         '&:hover': object
       }
+      primaryInverted: {
+        color: string
+        backgroundColor: string
+        cursor: string
+        border: string
+        borderRadius: number
+        fontWeight: number
+        '&:hover': object
+      }
       secondary: {
+        color: string
+        backgroundColor: string
+        cursor: string
+        border: string
+        borderRadius: number
+        '&:hover': object
+      }
+      secondaryInverted: {
         color: string
         backgroundColor: string
         cursor: string

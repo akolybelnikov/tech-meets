@@ -1,10 +1,11 @@
-import React from 'react';
+import axios, { AxiosResponse } from 'axios';
+import React, { useEffect, useState } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import Events from './components/events/Events';
 import Header from './components/layout/Header';
-import Button from './components/shared/Buttons';
-import { Container } from './components/shared/Container';
+import Container from './components/shared/Container';
 import Head from './components/utils/Head';
+import { Event } from './models/Event';
 import { AppTheme } from './theme';
 
 const GlobalStyle = createGlobalStyle`
@@ -25,15 +26,33 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const App: React.FC = () => {
+  const [events, setEventsData] = useState<Event[]>([])
+  const [userEvents, setUserEvents] = useState<Event[]>([])
+  const [subset, setSubset] = useState<string>('all')
+
+  useEffect(() => {
+    async function fetchAllEventsData() {
+      const { data }: AxiosResponse = await axios('http://localhost:3001/events')
+      setEventsData(data);
+    }
+
+    async function fetchMyEventsData() {
+      const { data }: AxiosResponse = await axios('http://localhost:3001/user')
+      setUserEvents(data)
+    }
+
+    fetchAllEventsData()
+    fetchMyEventsData()
+  }, [])
+
   return (
     <ThemeProvider theme={AppTheme}>
-      <Container p={3}>
+      <Container>
         <Head />
         <GlobalStyle />
-        <Header />
-        <Container px={5}>
-          <Button variant='secondary'>Events</Button>
-          <Events />
+        <Header setSubset={setSubset} />
+        <Container sx={{ margin: '0 auto' }} p={[1, 2, 3]} width={['100%', '95%', '760px']}>
+          <Events events={subset === 'all' ? events : userEvents} />
         </Container>
       </Container>
     </ThemeProvider>
