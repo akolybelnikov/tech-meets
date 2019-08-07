@@ -19,6 +19,6 @@ const AppLogo = styled(Image)`
     pointer-events: none;
 `
 
-const Logo = (props: any) => <AppLogo src={logo} {...props} sx={{ height: '40vmin' }} alt="logo" />
+const Logo = (props: any) => <AppLogo src={logo} {...props} sx={{ height: '10vmin' }} alt="logo" />
 
 export default Logo

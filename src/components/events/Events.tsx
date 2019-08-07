@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Event } from '../../models/Event';
 import axios, { AxiosResponse } from 'axios';
+import {Flex as RebassFlex} from 'rebass'
+
 import EventCard from './Event'
+
+const Flex = (props: any) => <RebassFlex {...props} sx={{flexWrap: 'wrap'}} />
 
 export default () => {
     const [events, setEventsData] = useState<Event[]>([])
@@ -17,13 +21,13 @@ export default () => {
     }, [])
 
     return (
-        <React.Fragment>
+        <Flex>
             {
                 events && events.map((event, idx) => (
                     <EventCard key={idx} event={event} />
 
                 ))
             }
-        </React.Fragment>
+        </Flex>
     )
 }

@@ -1,14 +1,11 @@
-import React from 'react'
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
-import { Box } from 'rebass'
-
-import Head from './components/utils/Head'
-import Events from './components/events/Events'
-import { AppTheme } from './theme'
-import Logo from './components/shared/Logo'
-import Title from './components/shared/Title'
-import SubTitle from './components/shared/SubTitle'
-import Button from './components/shared/Buttons'
+import React from 'react';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import Events from './components/events/Events';
+import Header from './components/layout/Header';
+import Button from './components/shared/Buttons';
+import { Container } from './components/shared/Container';
+import Head from './components/utils/Head';
+import { AppTheme } from './theme';
 
 const GlobalStyle = createGlobalStyle`
   body, html {
@@ -27,37 +24,18 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const Root = (props: any) => <Box {...props} sx={{}} />
-
-
-const Header = styled.header`
-  color: ${props => props.theme.colors.black}
-  min-height: 40vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-`
-
 const App: React.FC = () => {
-
-
   return (
     <ThemeProvider theme={AppTheme}>
-      <Root>
+      <Container p={3}>
         <Head />
         <GlobalStyle />
-        <Header>
-          <Logo />
-          <Title />
-          <SubTitle />
-        </Header>
-        <Box>
+        <Header />
+        <Container px={5}>
           <Button variant='secondary'>Events</Button>
           <Events />
-        </Box>
-      </Root>
+        </Container>
+      </Container>
     </ThemeProvider>
   )
 }
