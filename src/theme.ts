@@ -42,8 +42,8 @@ const AppTheme: DefaultTheme = {
       borderRadius: 0,
       fontWeight: 700,
       '&:hover': {
-        color: darkBlue,
-        backgroundColor: 'transparent',
+        // color: darkBlue,
+        // backgroundColor: 'transparent',
       },
     },
     secondary: {

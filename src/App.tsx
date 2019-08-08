@@ -38,10 +38,14 @@ const App: React.FC = () => {
       setCities(cities.data)
 
       const events: AxiosResponse = await axios('http://localhost:3001/events')
-      setEventsData(events.data)
+      setEventsData(events.data.sort(
+        (a: Event, b: Event) => (a.startDate > b.startDate) ? 1 : -1
+      ))
 
       const myEvents: AxiosResponse = await axios('http://localhost:3001/user')
-      setUserEvents(myEvents.data)
+      setUserEvents(myEvents.data.sort(
+        (a: Event, b: Event) => (a.startDate > b.startDate) ? 1 : -1
+      ))
     }
 
     fetchData()
