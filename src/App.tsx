@@ -7,6 +7,7 @@ import Container from './components/shared/Container';
 import Head from './components/utils/Head';
 import { Event } from './models/Event';
 import { AppTheme } from './theme';
+import { City } from './models/City';
 
 const GlobalStyle = createGlobalStyle`
   body, html {
@@ -28,21 +29,22 @@ const GlobalStyle = createGlobalStyle`
 const App: React.FC = () => {
   const [events, setEventsData] = useState<Event[]>([])
   const [userEvents, setUserEvents] = useState<Event[]>([])
+  const [cities, setCities] = useState<City[]>([])
   const [subset, setSubset] = useState<string>('all')
 
   useEffect(() => {
-    async function fetchAllEventsData() {
-      const { data }: AxiosResponse = await axios('http://localhost:3001/events')
-      setEventsData(data);
+    async function fetchData() {
+      const cities: AxiosResponse = await axios('http://localhost:3001/cities')
+      setCities(cities.data)
+
+      const events: AxiosResponse = await axios('http://localhost:3001/events')
+      setEventsData(events.data)
+
+      const myEvents: AxiosResponse = await axios('http://localhost:3001/user')
+      setUserEvents(myEvents.data)
     }
 
-    async function fetchMyEventsData() {
-      const { data }: AxiosResponse = await axios('http://localhost:3001/user')
-      setUserEvents(data)
-    }
-
-    fetchAllEventsData()
-    fetchMyEventsData()
+    fetchData()
   }, [])
 
   return (
@@ -52,7 +54,7 @@ const App: React.FC = () => {
         <GlobalStyle />
         <Header setSubset={setSubset} />
         <Container sx={{ margin: '0 auto' }} p={[1, 2, 3]} width={['100%', '95%', '760px']}>
-          <Events events={subset === 'all' ? events : userEvents} />
+          <Events events={subset === 'all' ? events : userEvents} cities={cities} />
         </Container>
       </Container>
     </ThemeProvider>

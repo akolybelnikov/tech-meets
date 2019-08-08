@@ -19,7 +19,6 @@ const slideInUp = keyframes`
     opacity: 1;
   }
 `
-
 const EventCard = styled(Card).attrs({
   width: ['95%', '80%', '750px'],
   height: 'auto',
@@ -33,6 +32,6 @@ export default ({ eventGroup }: { eventGroup: EventGroup }) =>
   <EventCard>
     <SubTitle>{eventGroup.date}</SubTitle>
     {eventGroup.events.map((event, idx) => (
-      <Event key={idx} event={event} />
+      <Event key={idx} event={event} city={{id: 0, name: ''}} />
     ))}
   </EventCard>
