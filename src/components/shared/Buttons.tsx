@@ -1,10 +1,10 @@
 import React from 'react'
 import { withTheme } from 'styled-components'
-import { Button as PrimaryButton } from 'rebass'
+import { Button as RebassButton } from 'rebass'
 
 const Button = (props: any) => {
 
-    return <PrimaryButton sx={{ fontFamily: 'Lato, sans-serif' }} {...props} />
+    return <RebassButton sx={{ fontFamily: 'Lato, sans-serif' }} {...props} />
 }
 
 export default withTheme(Button)

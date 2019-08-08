@@ -8,7 +8,7 @@ const darkGreen = '#458314',
   orange = '#F28E24',
   black = '#37454D',
   grey = '#9BA8A6',
-  background = '#EBECED'
+  backgroundGrey = '#EBECED'
 
 const AppTheme: DefaultTheme = {
   colors: {
@@ -20,7 +20,7 @@ const AppTheme: DefaultTheme = {
     orange,
     black,
     grey,
-    background,
+    backgroundGrey,
   },
   buttons: {
     primary: {

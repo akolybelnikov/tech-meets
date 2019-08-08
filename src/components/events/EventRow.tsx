@@ -9,29 +9,17 @@ import Box from '../shared/Box';
 import Button from '../shared/Buttons';
 import FlexRow from '../shared/FlexRow';
 import SubTitle from '../shared/SubTitle';
+import Title from '../shared/Title'
 import Text from '../shared/Text';
-import customAnimationStyles from './events.module.scss'
+import customStyles from './events.module.scss'
+import Card from '../shared/Card';
+import Flex from '../shared/Flex';
+import FlexContainer from '../shared/FlexContainer';
+import axios, { AxiosResponse } from 'axios';
 
 const RowItem = styled(Box).attrs({
   padding: [1, 2]
 })``
-
-const Animated = styled(Modal)`
-  .transitionEnter {
-    transform: scale(0);
-  }
-  .transitionEnterActive {
-    transform: scale(1);
-    transition: transform 1000ms ease;
-  }
-  .transitionExit {
-    transform: scale(1);
-  }
-  .transitionExitActive {
-    transform: scale(0);
-    transition: transform 1000ms ease;
-  }
-`
 
 export default ({ event, city }: { event: Event, city: City }) => {
   const [open, setModal] = useState(false)
@@ -45,12 +33,20 @@ export default ({ event, city }: { event: Event, city: City }) => {
   }
 
   const onOpenModal = () => {
-    setModal(true);
+    setModal(true)
   };
 
   const onCloseModal = () => {
-    setModal(false);
+    setModal(false)
   };
+
+  const onSaveEvent = async () => {
+    const res: AxiosResponse = await axios.post('http://localhost:3001/user', event)
+
+    console.log(res)
+
+    setModal(false)
+  }
 
   return (
     <Fragment>
@@ -81,20 +77,46 @@ export default ({ event, city }: { event: Event, city: City }) => {
           <Button variant='primaryInverted' onClick={onOpenModal}>Sign up</Button>
         </RowItem>
       </FlexRow>
-      <Animated
+      <Modal
         open={open}
         onClose={onCloseModal}
         center
         animationDuration={500}
         classNames={{
-          transitionEnter: customAnimationStyles.transitionEnter,
-          transitionEnterActive: customAnimationStyles.transitionEnterActive,
-          transitionExit: customAnimationStyles.transitionExitActive,
-          transitionExitActive: customAnimationStyles.transitionExitActive,
+          transitionEnter: customStyles.transitionEnter,
+          transitionEnterActive: customStyles.transitionEnterActive,
+          transitionExit: customStyles.transitionExitActive,
+          transitionExitActive: customStyles.transitionExitActive,
+          overlay: customStyles.customOverlay,
+          modal: customStyles.customModal,
         }}
       >
-        <h2>Simple centered modal</h2>
-      </Animated>
+        <Card>
+          <Flex py={[3]} sx={{ justifyContent: 'center', background: 'lightGreen' }}>
+            <Title>Join the event</Title>
+          </Flex>
+          <FlexContainer minHeight={'35vh'} p={[2, 3, 4]}>
+            <SubTitle style={{ display: 'inline-block' }}>
+              {`You are about to sign up for `}
+            </SubTitle>
+            <SubTitle style={{ display: 'inline-block' }} color="orange">
+              {name}
+            </SubTitle>
+            <SubTitle style={{ display: 'inline-block' }}>
+              {` This event takes place on the `}
+              <Moment format="Do MMMM">{startDate}</Moment>{` in ${city.name}.`}<br /><br />Are you sure?
+            </SubTitle>
+          </FlexContainer>
+          <Flex py={[3]} sx={{ justifyContent: 'flex-end' }}>
+            <Box sx={{ flex: ['30% 0 0', '25% 0 0'], textAlign: 'center' }}>
+              <Button minWidth={[84]} variant='primaryInverted' onClick={onCloseModal}>Cancel</Button>
+            </Box>
+            <Box sx={{ flex: ['30% 0 0', '25% 0 0'], textAlign: 'center' }}>
+              <Button minWidth={[84]} variant='primaryInverted' onClick={onSaveEvent}>Join</Button>
+            </Box>
+          </Flex>
+        </Card>
+      </Modal>
     </Fragment>
   )
 }

@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Lato', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: ${props => (props.theme.colors.background)};
+    background: ${props => (props.theme.colors.backgroundGrey)};
     color: ${props => (props.theme.colors.black)};
   }
   h1,h2,h3,h4,h5 {

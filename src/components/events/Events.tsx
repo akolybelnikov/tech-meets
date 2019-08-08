@@ -20,7 +20,7 @@ export default ({ events, cities }: { events: Event[], cities: City[] }) => {
         return groups
     }, [])
 
-    return <FlexContainer>
+    return <FlexContainer py={[3, 4]}>
         {groups && groups.map(
             (group, idx) => (
                 <EventCard key={idx} eventGroup={group} cities={cities} />

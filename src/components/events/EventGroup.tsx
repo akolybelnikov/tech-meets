@@ -25,7 +25,7 @@ const slideInUp = keyframes`
 `
 const EventCard = styled(Card)`
   animation: ${slideInUp} 500ms ease-out;
-  box-shadow: 4px 4px 12px ${props => props.theme.colors.darkBlue};
+  box-shadow: 2px 2px 10px ${props => props.theme.colors.darkBlue};
   border-radius: 4px;
   background: #fff;
   transition: all 300ms ease-out;
