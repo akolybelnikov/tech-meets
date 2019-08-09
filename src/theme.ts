@@ -55,8 +55,8 @@ const AppTheme: DefaultTheme = {
       border: `2px solid ${darkGreen}`,
       borderRadius: 0,
       '&:hover': {
-        // color: '#fff',
-        // backgroundColor: darkGreen,
+        color: '#fff',
+        backgroundColor: darkGreen,
       },
     },
     secondaryInverted: {

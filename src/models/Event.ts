@@ -5,4 +5,5 @@ export interface TechEvent {
     city: number,
     startDate: string,
     endDate: string,
+    cityName?: string,
 }

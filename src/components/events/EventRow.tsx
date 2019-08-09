@@ -130,7 +130,8 @@ export default (
             </SubTitle>
             <SubTitle style={{ display: 'inline-block' }}>
               {!cancel && ` This event takes place on the `}
-              {!cancel && <Moment format="Do MMMM">{startDate}</Moment>}{!cancel && ` in ${city.name}.`}<br /><br />Are you sure?
+              {!cancel && <Moment format="Do MMMM">{startDate}</Moment>}
+              {!cancel && ` in ${city && city.name}.`}<br /><br />Are you sure?
             </SubTitle>
           </FlexContainer>
           <Flex py={[3]} sx={{ justifyContent: 'flex-end' }}>

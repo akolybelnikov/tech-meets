@@ -4,12 +4,13 @@ import { City } from '../../models/City';
 import { TechEvent } from '../../models/Event';
 import { EventGroup } from '../../models/EventGroup';
 import FlexContainer from '../shared/FlexContainer';
-import EventCard from './EventGroup';
 import SubTitle from '../shared/SubTitle';
+import EventCard from './EventGroup';
 
 export default (
     { events, cities, userEvents, fetchUserEvents }:
         { events: TechEvent[], cities: City[], userEvents: TechEvent[], fetchUserEvents: Function }) => {
+
     const groups = events.reduce((groups: EventGroup[], curr: TechEvent): EventGroup[] => {
         let idx = groups.findIndex((e: EventGroup) => isSameDay(e.date, curr.startDate))
         if (idx !== -1) {
@@ -33,6 +34,7 @@ export default (
                     fetchUserEvents={fetchUserEvents} />
             )
         )}
+
         {!groups.length && <FlexContainer minHeight={'50vh'} justifyContent={'center'}>
             <SubTitle textAlign={'center'}>
                 You have not signed up for eny events yet.

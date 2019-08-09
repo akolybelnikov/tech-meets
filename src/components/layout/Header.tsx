@@ -11,6 +11,9 @@ const Flex = (props: any) => (
 
 const HeaderContainer = styled(Flex).attrs({})`
     background: #fff;
+    box-shadow: 0 1px 5px ${props => props.theme.colors.orange};
+    width: 100%;
+    position: fixed;
 `
 
 const Button = styled(SubTitle)`
