@@ -33,6 +33,7 @@ const App: React.FC = () => {
   const [cities, setCities] = useState<City[]>([])
   const [subset, setSubset] = useState<string>('all')
   const [renderedEvents, setRenderedEvents] = useState<TechEvent[]>([])
+  const [searchView, setView] = useState<boolean>(false)
 
   useEffect(() => {
     async function fetchData() {
@@ -44,20 +45,33 @@ const App: React.FC = () => {
         (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
       ))
 
+      const userResult: AxiosResponse = await axios('http://localhost:3001/user')
+      setUserEvents(userResult.data.sort(
+        (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
+      ))
+
       setRenderedEvents(result.data.sort(
         (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
       ))
     }
 
     fetchData()
-    fetchUserEvents()
   }, [])
 
-  const fetchUserEvents = async () => {
-    const myEvents: AxiosResponse = await axios('http://localhost:3001/user')
-    setUserEvents(myEvents.data.sort(
+  const reFetchUserEvents = async () => {
+    const userResult: AxiosResponse = await axios('http://localhost:3001/user')
+    const sorted = userResult.data.sort(
       (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
-    ))
+    )
+    setUserEvents(sorted)
+    if (subset === 'my') {
+      setRenderedEvents(sorted)
+    }
+  }
+
+  const setCurrentSubset = (subset: string) => {
+    setSubset(subset)
+    subset === 'all' ? setRenderedEvents(events) : setRenderedEvents(userEvents)
   }
 
   return (
@@ -65,14 +79,19 @@ const App: React.FC = () => {
       <Container>
         <Head />
         <GlobalStyle />
-        <Header setSubset={setSubset} />
+        <Header active={subset} setSubset={setCurrentSubset} setView={setView} />
         <Container sx={{ margin: '0 auto' }} px={[1, 2, 3]} py={[5, 6]} width={['100%', '95%', '760px']}>
-          <Search events={events} cities={cities} setEvents={setRenderedEvents} />
+          <Search
+            events={subset === 'all' ? events : userEvents}
+            cities={cities}
+            setEvents={setRenderedEvents}
+            setView={setView} />
           <Events
-            events={subset === 'all' ? renderedEvents : userEvents}
+            searchView={searchView}
+            events={renderedEvents}
             cities={cities}
             userEvents={userEvents}
-            fetchUserEvents={fetchUserEvents} />
+            fetchUserEvents={reFetchUserEvents} />
         </Container>
       </Container>
     </ThemeProvider>

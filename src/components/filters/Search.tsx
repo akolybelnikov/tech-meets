@@ -6,8 +6,9 @@ import { TechEvent } from '../../models/Event';
 import { AppTheme } from '../../theme';
 import Button from '../shared/Buttons';
 import Flex from '../shared/Flex';
+import { SwipeableListView } from "react-native";
 
-const Search = ({ events, setEvents }: { events: any[], setEvents: Function }) => {
+const Search = ({ events, setEvents, setView }: { events: any[], setEvents: Function, setView: Function }) => {
     const formApi = useFormApi<FormApi>();
     const { values: field } = useFormState()
 
@@ -34,12 +35,14 @@ const Search = ({ events, setEvents }: { events: any[], setEvents: Function }) =
                 }
             }
             setEvents(searchItems)
+            setView(true)
         }
     }
 
     const onClearInput = () => {
         formApi.reset()
         setEvents(events)
+        setView(false)
     }
 
     return (
@@ -51,14 +54,11 @@ const Search = ({ events, setEvents }: { events: any[], setEvents: Function }) =
 }
 
 const SearchForm = (
-    { events, cities, setEvents }: { events: TechEvent[], cities: City[], setEvents: Function }
+    { events, cities, setEvents, setView }: { events: TechEvent[], cities: City[], setEvents: Function, setView: Function }
 ) => {
-    const setSearchEvents = (events: TechEvent[]) => {
-        setEvents(events)
-    }
     return (
         <Form>
-            <Search events={events.slice()} setEvents={setSearchEvents} />
+            <Search events={events.slice()} setEvents={setEvents} setView={setView} />
         </Form>
     )
 }

@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { Flex as RebassFlex } from 'rebass'
-import styled, { withTheme, DefaultTheme } from 'styled-components'
+import React from 'react';
+import { Flex as RebassFlex } from 'rebass';
+import styled, { DefaultTheme, withTheme } from 'styled-components';
+import Logo from '../shared/Logo';
+import SubTitle from '../shared/SubTitle';
 
-import Logo from '../shared/Logo'
-import SubTitle from '../shared/SubTitle'
 
 const Flex = (props: any) => (
     <RebassFlex {...props} />
@@ -28,16 +28,15 @@ const Button = styled(SubTitle)`
     }
 `
 
-const Header = ({ theme, setSubset }: { theme: DefaultTheme, setSubset: Function }) => {
-    const [active, setState] = useState('all')
+const Header = ({ theme, setSubset, active, setView }: { theme: DefaultTheme, setSubset: Function, active: string, setView: Function }) => {
 
     const setAllActive = () => {
-        setState('all')
         setSubset('all')
+        setView(false)
     }
     const setMyActive = () => {
-        setState('my')
         setSubset('my')
+        setView(false)
     }
 
     return (

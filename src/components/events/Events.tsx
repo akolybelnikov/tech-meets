@@ -8,8 +8,14 @@ import SubTitle from '../shared/SubTitle';
 import EventCard from './EventGroup';
 
 export default (
-    { events, cities, userEvents, fetchUserEvents }:
-        { events: TechEvent[], cities: City[], userEvents: TechEvent[], fetchUserEvents: Function }) => {
+    { events, cities, userEvents, fetchUserEvents, searchView }:
+        {
+            events: TechEvent[],
+            cities: City[],
+            userEvents: TechEvent[],
+            fetchUserEvents: Function,
+            searchView: boolean
+        }) => {
 
     const groups = events.reduce((groups: EventGroup[], curr: TechEvent): EventGroup[] => {
         let idx = groups.findIndex((e: EventGroup) => isSameDay(e.date, curr.startDate))
@@ -36,11 +42,16 @@ export default (
         )}
 
         {!groups.length && <FlexContainer minHeight={'50vh'} justifyContent={'center'}>
-            <SubTitle textAlign={'center'}>
+            {!searchView && <SubTitle textAlign={'center'}>
                 You have not signed up for eny events yet.
                 <br /><br />
                 You can fix that by going back to the list of all our events and signing up for one!
-            </SubTitle>
+            </SubTitle>}
+            {searchView && <SubTitle textAlign={'center'}>
+                You search did not bring any results.
+                <br /><br />
+                You can try changing the search terms!
+            </SubTitle>}
         </FlexContainer>}
     </FlexContainer>
 }

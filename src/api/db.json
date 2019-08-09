@@ -245,12 +245,12 @@
   ],
   "user": [
     {
-      "id": 19,
+      "id": 1,
       "isFree": true,
-      "name": "Refactoring to clean code",
+      "name": "Git Deep: A look at some of Git's powerful, underused features",
       "city": 1,
-      "startDate": "2019-07-14T14:00:00+00:00",
-      "endDate": "2019-07-14T15:00:00+00:00"
+      "startDate": "2019-06-09T21:30:00+00:00",
+      "endDate": "2019-06-09T23:50:00+00:00"
     }
   ]
 }
