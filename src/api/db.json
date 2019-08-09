@@ -253,28 +253,12 @@
       "endDate": "2019-06-09T23:50:00+00:00"
     },
     {
-      "id": 16,
+      "id": 3,
       "isFree": true,
-      "name": "Let's build an app",
-      "city": 10,
-      "startDate": "2019-06-18T07:00:00+00:00",
-      "endDate": "2019-06-18T09:00:00+00:00"
-    },
-    {
-      "id": 9,
-      "isFree": false,
-      "name": "Refactoring to clean code",
-      "city": 2,
-      "startDate": "2019-07-17T12:00:00+00:00",
-      "endDate": "2019-07-17T14:00:00+00:00"
-    },
-    {
-      "id": 21,
-      "isFree": true,
-      "name": "Git Deep: A look at some of Git's powerful, underused features",
-      "city": 9,
-      "startDate": "2019-08-05T18:15:00+00:00",
-      "endDate": "2019-08-05T19:15:00+00:00"
+      "name": "CSS VS SASS",
+      "city": 8,
+      "startDate": "2019-07-03T17:00:00+00:00",
+      "endDate": "2019-07-03T18:30:00+00:00"
     }
   ]
 }

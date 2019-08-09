@@ -1,29 +1,31 @@
+import axios from 'axios';
 import { differenceInMinutes } from 'date-fns';
 import React, { Fragment, useState } from 'react';
 import Moment from 'react-moment';
 import Modal from 'react-responsive-modal';
 import styled from 'styled-components';
 import { City } from '../../models/City';
-import { Event } from '../../models/Event';
+import { TechEvent } from '../../models/Event';
 import Box from '../shared/Box';
 import Button from '../shared/Buttons';
-import FlexRow from '../shared/FlexRow';
-import SubTitle from '../shared/SubTitle';
-import Title from '../shared/Title'
-import Text from '../shared/Text';
-import customStyles from './events.module.scss'
 import Card from '../shared/Card';
 import Flex from '../shared/Flex';
 import FlexContainer from '../shared/FlexContainer';
-import axios, { AxiosResponse } from 'axios';
+import FlexRow from '../shared/FlexRow';
+import SubTitle from '../shared/SubTitle';
+import Text from '../shared/Text';
+import Title from '../shared/Title';
+import customStyles from './events.module.scss';
 
 const RowItem = styled(Box).attrs({
   padding: [1, 2]
 })``
 
-export default ({ event, city }: { event: Event, city: City }) => {
+export default (
+  { event, city, joined, fetchUserEvents }:
+    { event: TechEvent, city: City, joined: boolean, fetchUserEvents: Function }) => {
   const [open, setModal] = useState(false)
-
+  const [cancel, setCancel] = useState(false)
   const { startDate, name, isFree, endDate } = event
 
   const formatDuration = (minutes: number): string => {
@@ -32,7 +34,8 @@ export default ({ event, city }: { event: Event, city: City }) => {
     return rest !== 0 ? `${hours}h ${rest}m` : `${hours}h`
   }
 
-  const onOpenModal = () => {
+  const onOpenJoinModal = () => {
+    setCancel(false)
     setModal(true)
   };
 
@@ -40,12 +43,29 @@ export default ({ event, city }: { event: Event, city: City }) => {
     setModal(false)
   };
 
-  const onSaveEvent = async () => {
-    const res: AxiosResponse = await axios.post('http://localhost:3001/user', event)
+  const onOpenLeaveModal = () => {
+    setCancel(true)
+    setModal(true)
+  };
 
-    console.log(res)
+  const onJoinEvent = async () => {
+    try {
+      await axios.post('http://localhost:3001/user', event)
+      await fetchUserEvents()
+      setModal(false)
+    } catch (e) {
+      setModal(false)
+    }
+  }
 
-    setModal(false)
+  const onLeaveEvent = async () => {
+    try {
+      await axios.delete(`http://localhost:3001/user/${event.id}`)
+      await fetchUserEvents()
+      setModal(false)
+    } catch (e) {
+      setModal(false)
+    }
   }
 
   return (
@@ -63,18 +83,20 @@ export default ({ event, city }: { event: Event, city: City }) => {
               differenceInMinutes(endDate, startDate)
             )}</Text></Box>
           </Box>
-          <Box sx={{ flex: '10%', textAlign: 'left', display: 'flex', alignItems: 'center' }}>
-            <SubTitle ml={1}>{isFree && <Text color="darkGreen">Free!!!</Text>}</SubTitle>
+          <Box sx={{ flex: !joined ? '10%' : '35%', textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+            {!joined && <SubTitle ml={1}>{isFree && <Text color="darkGreen">Free!!!</Text>}</SubTitle>}
+            {joined && <Button mr={[5]} disabled variant='secondary'>You're in!</Button>}
           </Box>
         </RowItem>
         <RowItem sx={{
           display: 'flex',
-          flexDirection: 'column',
-          justifyContent: ['flex-start', 'center'],
+          flexDirection: ['row', 'column'],
+          justifyContent: ['space-around'],
           flex: '1 1 auto',
           alignItems: ['center']
         }}>
-          <Button variant='primaryInverted' onClick={onOpenModal}>Sign up</Button>
+          {!joined && <Button variant='primaryInverted' onClick={onOpenJoinModal}>Sign up</Button>}
+          {joined && <Button variant='primaryInverted' onClick={onOpenLeaveModal}>Leave</Button>}
         </RowItem>
       </FlexRow>
       <Modal
@@ -93,18 +115,20 @@ export default ({ event, city }: { event: Event, city: City }) => {
       >
         <Card>
           <Flex py={[3]} sx={{ justifyContent: 'center', background: 'lightGreen' }}>
-            <Title>Join the event</Title>
+            {!cancel && <Title>Join the event</Title>}
+            {cancel && <Title>Leave the event</Title>}
           </Flex>
           <FlexContainer minHeight={'35vh'} p={[2, 3, 4]}>
             <SubTitle style={{ display: 'inline-block' }}>
-              {`You are about to sign up for `}
+              {!cancel && `You are about to sign up for `}
+              {cancel && `You are about to leave `}
             </SubTitle>
             <SubTitle style={{ display: 'inline-block' }} color="orange">
               {name}
             </SubTitle>
             <SubTitle style={{ display: 'inline-block' }}>
-              {` This event takes place on the `}
-              <Moment format="Do MMMM">{startDate}</Moment>{` in ${city.name}.`}<br /><br />Are you sure?
+              {!cancel && ` This event takes place on the `}
+              {!cancel && <Moment format="Do MMMM">{startDate}</Moment>}{!cancel && ` in ${city.name}.`}<br /><br />Are you sure?
             </SubTitle>
           </FlexContainer>
           <Flex py={[3]} sx={{ justifyContent: 'flex-end' }}>
@@ -112,7 +136,8 @@ export default ({ event, city }: { event: Event, city: City }) => {
               <Button minWidth={[84]} variant='primaryInverted' onClick={onCloseModal}>Cancel</Button>
             </Box>
             <Box sx={{ flex: ['30% 0 0', '25% 0 0'], textAlign: 'center' }}>
-              <Button minWidth={[84]} variant='primaryInverted' onClick={onSaveEvent}>Join</Button>
+              {!cancel && <Button minWidth={[84]} variant='secondaryInverted' onClick={onJoinEvent}>Join</Button>}
+              {cancel && <Button minWidth={[84]} variant='warningInverted' onClick={onLeaveEvent}>Leave</Button>}
             </Box>
           </Flex>
         </Card>

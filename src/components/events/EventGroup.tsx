@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import Moment from 'react-moment';
 import styled, { keyframes } from 'styled-components';
 import { City } from '../../models/City';
+import { TechEvent } from '../../models/Event';
 import { EventGroup } from '../../models/EventGroup';
 import Card from '../shared/Card';
 import Divider from '../shared/Divider';
@@ -30,24 +31,35 @@ const EventCard = styled(Card)`
   background: #fff;
   transition: all 300ms ease-out;
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     background: ${props => props.theme.colors.lightGreen};
   }
 `
 
-export default ({ eventGroup, cities }: { eventGroup: EventGroup, cities: City[] }) => {
+export default (
+  { eventGroup, cities, userEvents, fetchUserEvents }:
+    { eventGroup: EventGroup, cities: City[], userEvents: TechEvent[], fetchUserEvents: Function }) => {
   const { date, events } = eventGroup
 
   return (
     <FlexContainer width={['95%', '100%']} m={'0 auto'}>
       {date && <Text><Moment format="dddd Do MMMM">{date}</Moment></Text>}
       <EventCard mt={[2, 3]} mb={[3, 4]}>
-        {events.map((event, idx) => (
-          <Fragment key={idx}>
-            <EventRow event={event} city={cities.filter(city => city.id === event.city)[0]} />
-            {(idx < events.length - 1) && <Divider />}
-          </Fragment>
-        ))}
+        {events.map((event, idx) => {
+          const joined = (userEvents.findIndex(joinedEvent => joinedEvent.id === event.id) !== -1)
+
+          return (
+            <Fragment key={idx}>
+              <EventRow
+                event={event}
+                city={cities.filter(city => city.id === event.city)[0]}
+                joined={joined}
+                fetchUserEvents={fetchUserEvents}
+              />
+              {(idx < events.length - 1) && <Divider />}
+            </Fragment>
+          )
+        })}
       </EventCard>
     </FlexContainer>
   )

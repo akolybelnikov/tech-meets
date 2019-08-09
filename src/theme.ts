@@ -45,6 +45,7 @@ const AppTheme: DefaultTheme = {
         // color: darkBlue,
         // backgroundColor: 'transparent',
       },
+      minWidth: '7rem'
     },
     secondary: {
       color: darkGreen,
@@ -53,8 +54,8 @@ const AppTheme: DefaultTheme = {
       border: `2px solid ${darkGreen}`,
       borderRadius: 0,
       '&:hover': {
-        color: '#fff',
-        backgroundColor: darkGreen,
+        // color: '#fff',
+        // backgroundColor: darkGreen,
       },
     },
     secondaryInverted: {
@@ -68,6 +69,17 @@ const AppTheme: DefaultTheme = {
         backgroundColor: 'transparent',
       },
     },
+    warningInverted: {
+      color: '#fff',
+      backgroundColor: red,
+      cursor: 'pointer',
+      border: `2px solid ${red}`,
+      borderRadius: 0,
+      '&:hover': {
+        // color: darkGreen,
+        // backgroundColor: 'transparent',
+      },
+    }
   },
 }
 

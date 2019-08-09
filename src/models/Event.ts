@@ -1,4 +1,4 @@
-export interface Event {
+export interface TechEvent {
     id: number,
     isFree: boolean,
     name: string,

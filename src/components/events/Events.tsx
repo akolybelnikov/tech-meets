@@ -1,14 +1,16 @@
 import { isSameDay } from 'date-fns';
 import React from 'react';
 import { City } from '../../models/City';
-import { Event } from '../../models/Event';
+import { TechEvent } from '../../models/Event';
 import { EventGroup } from '../../models/EventGroup';
 import FlexContainer from '../shared/FlexContainer';
 import EventCard from './EventGroup';
 import SubTitle from '../shared/SubTitle';
 
-export default ({ events, cities }: { events: Event[], cities: City[] }) => {
-    const groups = events.reduce((groups: EventGroup[], curr: Event): EventGroup[] => {
+export default (
+    { events, cities, userEvents, fetchUserEvents }:
+        { events: TechEvent[], cities: City[], userEvents: TechEvent[], fetchUserEvents: Function }) => {
+    const groups = events.reduce((groups: EventGroup[], curr: TechEvent): EventGroup[] => {
         let idx = groups.findIndex((e: EventGroup) => isSameDay(e.date, curr.startDate))
         if (idx !== -1) {
             groups[idx].events = [...groups[idx].events, curr]
@@ -23,11 +25,20 @@ export default ({ events, cities }: { events: Event[], cities: City[] }) => {
     return <FlexContainer py={[3, 4]}>
         {groups && groups.map(
             (group, idx) => (
-                <EventCard key={idx} eventGroup={group} cities={cities} />
+                <EventCard
+                    key={idx}
+                    eventGroup={group}
+                    cities={cities}
+                    userEvents={userEvents}
+                    fetchUserEvents={fetchUserEvents} />
             )
         )}
         {!groups.length && <FlexContainer minHeight={'50vh'} justifyContent={'center'}>
-            <SubTitle textAlign={'center'}>You have not signed up for eny events yet.<br /><br />You can fix that by going back to the list of all our events and signing up for one!</SubTitle>
+            <SubTitle textAlign={'center'}>
+                You have not signed up for eny events yet.
+                <br /><br />
+                You can fix that by going back to the list of all our events and signing up for one!
+            </SubTitle>
         </FlexContainer>}
     </FlexContainer>
 }

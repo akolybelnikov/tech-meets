@@ -5,9 +5,9 @@ import Events from './components/events/Events';
 import Header from './components/layout/Header';
 import Container from './components/shared/Container';
 import Head from './components/utils/Head';
-import { Event } from './models/Event';
-import { AppTheme } from './theme';
 import { City } from './models/City';
+import { TechEvent } from './models/Event';
+import { AppTheme } from './theme';
 
 const GlobalStyle = createGlobalStyle`
   body, html {
@@ -27,8 +27,8 @@ const GlobalStyle = createGlobalStyle`
 `
 
 const App: React.FC = () => {
-  const [events, setEventsData] = useState<Event[]>([])
-  const [userEvents, setUserEvents] = useState<Event[]>([])
+  const [events, setEventsData] = useState<TechEvent[]>([])
+  const [userEvents, setUserEvents] = useState<TechEvent[]>([])
   const [cities, setCities] = useState<City[]>([])
   const [subset, setSubset] = useState<string>('all')
 
@@ -39,17 +39,20 @@ const App: React.FC = () => {
 
       const events: AxiosResponse = await axios('http://localhost:3001/events')
       setEventsData(events.data.sort(
-        (a: Event, b: Event) => (a.startDate > b.startDate) ? 1 : -1
-      ))
-
-      const myEvents: AxiosResponse = await axios('http://localhost:3001/user')
-      setUserEvents(myEvents.data.sort(
-        (a: Event, b: Event) => (a.startDate > b.startDate) ? 1 : -1
+        (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
       ))
     }
 
     fetchData()
+    fetchUserEvents()
   }, [])
+
+  const fetchUserEvents = async () => {
+    const myEvents: AxiosResponse = await axios('http://localhost:3001/user')
+    setUserEvents(myEvents.data.sort(
+      (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
+    ))
+  }
 
   return (
     <ThemeProvider theme={AppTheme}>
@@ -58,7 +61,11 @@ const App: React.FC = () => {
         <GlobalStyle />
         <Header setSubset={setSubset} />
         <Container sx={{ margin: '0 auto' }} p={[1, 2, 3]} width={['100%', '95%', '760px']}>
-          <Events events={subset === 'all' ? events : userEvents} cities={cities} />
+          <Events
+            events={subset === 'all' ? events : userEvents}
+            cities={cities}
+            userEvents={userEvents}
+            fetchUserEvents={fetchUserEvents} />
         </Container>
       </Container>
     </ThemeProvider>
