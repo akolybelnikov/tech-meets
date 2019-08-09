@@ -33,6 +33,7 @@ const AppTheme: DefaultTheme = {
         color: '#fff',
         backgroundColor: darkBlue,
       },
+      minWidth: '7rem'
     },
     primaryInverted: {
       color: '#fff',

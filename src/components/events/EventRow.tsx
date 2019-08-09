@@ -83,9 +83,11 @@ export default (
               differenceInMinutes(endDate, startDate)
             )}</Text></Box>
           </Box>
-          <Box sx={{ flex: !joined ? '10%' : '35%', textAlign: 'left', display: 'flex', alignItems: 'center' }}>
-            {!joined && <SubTitle ml={1}>{isFree && <Text color="darkGreen">Free!!!</Text>}</SubTitle>}
-            {joined && <Button mr={[5]} disabled variant='secondary'>You're in!</Button>}
+          <Box sx={{ flex: '10%', textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+            <SubTitle ml={1}>
+              {isFree && !joined && <Text color="darkGreen">Free!!!</Text>}
+              {joined && <Text color="darkGreen">You're in!</Text>}
+            </SubTitle>
           </Box>
         </RowItem>
         <RowItem sx={{
@@ -96,7 +98,7 @@ export default (
           alignItems: ['center']
         }}>
           {!joined && <Button variant='primaryInverted' onClick={onOpenJoinModal}>Sign up</Button>}
-          {joined && <Button variant='primaryInverted' onClick={onOpenLeaveModal}>Leave</Button>}
+          {joined && <Button variant='primary' onClick={onOpenLeaveModal}>Leave</Button>}
         </RowItem>
       </FlexRow>
       <Modal

@@ -25,6 +25,7 @@ declare module 'styled-components' {
         border: string
         borderRadius: number
         '&:hover': object
+        minWidth: string
       }
       primaryInverted: {
         color: string
