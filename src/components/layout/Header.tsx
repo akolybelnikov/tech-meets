@@ -14,6 +14,7 @@ const HeaderContainer = styled(Flex).attrs({})`
     box-shadow: 0 1px 5px ${props => props.theme.colors.orange};
     width: 100%;
     position: fixed;
+    z-index: 100;
 `
 
 const Button = styled(SubTitle)`
@@ -28,7 +29,10 @@ const Button = styled(SubTitle)`
     }
 `
 
-const Header = ({ theme, setSubset, active, setView }: { theme: DefaultTheme, setSubset: Function, active: string, setView: Function }) => {
+const Header = (
+    { theme, setSubset, active, setView }:
+        { theme: DefaultTheme, setSubset: Function, active: string, setView: Function }
+) => {
 
     const setAllActive = () => {
         setSubset('all')

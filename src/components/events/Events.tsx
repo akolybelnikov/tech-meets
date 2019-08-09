@@ -18,6 +18,7 @@ export default (
         }) => {
 
     const groups = events.reduce((groups: EventGroup[], curr: TechEvent): EventGroup[] => {
+        curr.cityName = cities.filter(city => city.id === curr.city)[0].name
         let idx = groups.findIndex((e: EventGroup) => isSameDay(e.date, curr.startDate))
         if (idx !== -1) {
             groups[idx].events = [...groups[idx].events, curr]
@@ -30,12 +31,11 @@ export default (
     }, [])
 
     return <FlexContainer py={[3, 4]}>
-        {groups && groups.map(
+        {groups.map(
             (group, idx) => (
                 <EventCard
                     key={idx}
                     eventGroup={group}
-                    cities={cities}
                     userEvents={userEvents}
                     fetchUserEvents={fetchUserEvents} />
             )

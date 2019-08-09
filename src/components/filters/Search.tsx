@@ -6,7 +6,6 @@ import { TechEvent } from '../../models/Event';
 import { AppTheme } from '../../theme';
 import Button from '../shared/Buttons';
 import Flex from '../shared/Flex';
-import { SwipeableListView } from "react-native";
 
 const Search = ({ events, setEvents, setView }: { events: any[], setEvents: Function, setView: Function }) => {
     const formApi = useFormApi<FormApi>();
@@ -47,8 +46,22 @@ const Search = ({ events, setEvents, setView }: { events: any[], setEvents: Func
 
     return (
         <Flex pb={[2, 3, 4]}>
-            <Input field="term" style={{ border: `2px solid ${AppTheme.colors.darkGreen}`, padding: '.5rem', minWidth: '10rem' }} onChange={onChange} placeholder="Search events by name or city" />
-            <Button ml={[2]} py={[1]} variant="secondary" sx={{ borderRadius: 9999 }} onClick={onClearInput}>clear</Button>
+            <Input
+                field="term"
+                style={{
+                    border: `2px solid ${AppTheme.colors.darkGreen}`,
+                    padding: '.5rem', minWidth: '10rem'
+                }}
+                onChange={onChange}
+                placeholder="Search events by name or city" />
+            <Button
+                ml={[2]}
+                py={[1]}
+                variant="secondary"
+                sx={{ borderRadius: 9999 }}
+                onClick={onClearInput}>
+                clear
+                </Button>
         </Flex>
     )
 }
@@ -56,6 +69,7 @@ const Search = ({ events, setEvents, setView }: { events: any[], setEvents: Func
 const SearchForm = (
     { events, cities, setEvents, setView }: { events: TechEvent[], cities: City[], setEvents: Function, setView: Function }
 ) => {
+
     return (
         <Form>
             <Search events={events.slice()} setEvents={setEvents} setView={setView} />

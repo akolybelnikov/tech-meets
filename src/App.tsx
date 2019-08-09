@@ -64,8 +64,11 @@ const App: React.FC = () => {
       (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
     )
     setUserEvents(sorted)
-    if (subset === 'my') {
+    if (subset === 'my' && sorted.length) {
       setRenderedEvents(sorted)
+    } else {
+      setRenderedEvents(events)
+      setSubset('all')
     }
   }
 

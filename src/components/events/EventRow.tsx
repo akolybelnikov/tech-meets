@@ -3,8 +3,6 @@ import { differenceInMinutes } from 'date-fns';
 import React, { Fragment, useState } from 'react';
 import Moment from 'react-moment';
 import Modal from 'react-responsive-modal';
-import styled from 'styled-components';
-import { City } from '../../models/City';
 import { TechEvent } from '../../models/Event';
 import Box from '../shared/Box';
 import Button from '../shared/Buttons';
@@ -17,13 +15,9 @@ import Text from '../shared/Text';
 import Title from '../shared/Title';
 import customStyles from './events.module.scss';
 
-const RowItem = styled(Box).attrs({
-  padding: [1, 2]
-})``
-
 export default (
-  { event, city, joined, fetchUserEvents }:
-    { event: TechEvent, city: City, joined: boolean, fetchUserEvents: Function }) => {
+  { event, joined, fetchUserEvents }:
+    { event: TechEvent, joined: boolean, fetchUserEvents: Function }) => {
   const [open, setModal] = useState(false)
   const [cancel, setCancel] = useState(false)
   const { startDate, name, isFree, endDate } = event
@@ -70,36 +64,55 @@ export default (
 
   return (
     <Fragment>
-      <FlexRow>
-        <RowItem sx={{ flex: ['15%', '10%'] }}>
+      <FlexRow style={{ zIndex: 1 }}>
+        <Box p={[1, 2]} sx={{ flex: ['15%', '10%'] }}>
           {startDate && <Moment format="HH:mm">
             {startDate}
           </Moment>}
-        </RowItem>
-        <RowItem sx={{ display: 'flex', flex: ['80%', '70%'], justifyContent: 'flex-start' }}>
+        </Box>
+        <Box p={[1, 2]} sx={{
+          display: 'flex',
+          flex: ['80%', '70%'],
+          justifyContent: 'flex-start'
+        }}>
           <Box sx={{ flex: ['60%'] }}>
             <SubTitle>{name && name}</SubTitle>
-            <Box mt={[1]} sx={{ flex: '50%' }}><Text>{city && city.name} - {startDate && endDate && formatDuration(
-              differenceInMinutes(endDate, startDate)
-            )}</Text></Box>
+            <Box mt={[1]} sx={{ flex: '50%' }}>
+              <Text>{event.cityName} - {startDate && endDate && formatDuration(
+                differenceInMinutes(endDate, startDate)
+              )}</Text>
+            </Box>
           </Box>
-          <Box sx={{ flex: '10%', textAlign: 'left', display: 'flex', alignItems: 'center' }}>
+          <Box sx={{
+            flex: '10%',
+            textAlign: 'left',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
             <SubTitle ml={1}>
               {isFree && !joined && <Text color="darkGreen">Free!!!</Text>}
               {joined && <Text color="darkGreen">You're in!</Text>}
             </SubTitle>
           </Box>
-        </RowItem>
-        <RowItem sx={{
+        </Box>
+        <Box p={[1, 2]} sx={{
           display: 'flex',
           flexDirection: ['row', 'column'],
           justifyContent: ['space-around'],
           flex: '1 1 auto',
           alignItems: ['center']
         }}>
-          {!joined && <Button variant='primaryInverted' onClick={onOpenJoinModal}>Sign up</Button>}
-          {joined && <Button variant='primary' onClick={onOpenLeaveModal}>Leave</Button>}
-        </RowItem>
+          {!joined &&
+            <Button variant='primaryInverted' onClick={onOpenJoinModal}>
+              Sign up
+            </Button>
+          }
+          {joined &&
+            <Button variant='primary' onClick={onOpenLeaveModal}>
+              Leave
+            </Button>
+          }
+        </Box>
       </FlexRow>
       <Modal
         open={open}
@@ -116,7 +129,12 @@ export default (
         }}
       >
         <Card>
-          <Flex py={[3]} sx={{ justifyContent: 'center', background: 'lightGreen' }}>
+          <Flex
+            py={[3]}
+            sx={{
+              justifyContent: 'center',
+              background: 'lightGreen'
+            }}>
             {!cancel && <Title>Join the event</Title>}
             {cancel && <Title>Leave the event</Title>}
           </Flex>
@@ -131,16 +149,35 @@ export default (
             <SubTitle style={{ display: 'inline-block' }}>
               {!cancel && ` This event takes place on the `}
               {!cancel && <Moment format="Do MMMM">{startDate}</Moment>}
-              {!cancel && ` in ${city && city.name}.`}<br /><br />Are you sure?
+              {!cancel && ` in ${event.cityName}.`}<br /><br />Are you sure?
             </SubTitle>
           </FlexContainer>
           <Flex py={[3]} sx={{ justifyContent: 'flex-end' }}>
             <Box sx={{ flex: ['30% 0 0', '25% 0 0'], textAlign: 'center' }}>
-              <Button minWidth={[84]} variant='primaryInverted' onClick={onCloseModal}>Cancel</Button>
+              <Button
+                minWidth={[84]}
+                variant='primaryInverted'
+                onClick={onCloseModal}>
+                Cancel
+                </Button>
             </Box>
             <Box sx={{ flex: ['30% 0 0', '25% 0 0'], textAlign: 'center' }}>
-              {!cancel && <Button minWidth={[84]} variant='secondaryInverted' onClick={onJoinEvent}>Join</Button>}
-              {cancel && <Button minWidth={[84]} variant='warningInverted' onClick={onLeaveEvent}>Leave</Button>}
+              {!cancel &&
+                <Button
+                  minWidth={[84]}
+                  variant='secondaryInverted'
+                  onClick={onJoinEvent}>
+                  Join
+                </Button>
+              }
+              {cancel &&
+                <Button
+                  minWidth={[84]}
+                  variant='warningInverted'
+                  onClick={onLeaveEvent}>
+                  Leave
+                </Button>
+              }
             </Box>
           </Flex>
         </Card>
