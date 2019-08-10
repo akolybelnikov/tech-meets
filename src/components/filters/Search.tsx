@@ -1,40 +1,25 @@
-import Fuse, { FuseOptions, FuseResult } from "fuse.js";
 import { Form, FormApi, Text as Input, useFormApi, useFormState } from 'informed';
 import React from 'react';
-import { City } from '../../models/City';
+import searchEvents from '../../helpers/fuse-search';
 import { TechEvent } from '../../models/Event';
 import { AppTheme } from '../../theme';
+import Box from "../shared/Box";
 import Button from '../shared/Buttons';
 import Flex from '../shared/Flex';
 
-const Search = ({ events, setEvents, setView }: { events: any[], setEvents: Function, setView: Function }) => {
+const Search = (
+    { events, setEvents, setView, setTerm }:
+        { events: any[], setEvents: Function, setView: Function, setTerm: Function }
+) => {
     const formApi = useFormApi<FormApi>();
     const { values: field } = useFormState()
 
     const onChange = () => {
-        let searchItems: TechEvent[] = []
         if (field.term) {
-            const options: FuseOptions<any> = {
-                shouldSort: true,
-                includeMatches: true,
-                threshold: 0.3,
-                location: 0,
-                distance: 1000,
-                keys: ["name", "cityName"],
-            }
-
-            const fuse = new Fuse(events, options)
-            const results: FuseResult<any>[] = fuse.search(field.term)
-
-            if (results.length) {
-                for (let result of results) {
-                    if (result.matches.length) {
-                        searchItems = [...searchItems, ...[result.item]]
-                    }
-                }
-            }
-            setEvents(searchItems)
+            const results: TechEvent[] = searchEvents(field.term, events)
+            setEvents(results)
             setView(true)
+            setTerm(field.term)
         }
     }
 
@@ -42,10 +27,11 @@ const Search = ({ events, setEvents, setView }: { events: any[], setEvents: Func
         formApi.reset()
         setEvents(events)
         setView(false)
+        setTerm(null)
     }
 
     return (
-        <Flex pb={[2, 3, 4]}>
+        <Flex>
             <Input
                 field="term"
                 style={{
@@ -67,13 +53,20 @@ const Search = ({ events, setEvents, setView }: { events: any[], setEvents: Func
 }
 
 const SearchForm = (
-    { events, cities, setEvents, setView }: { events: TechEvent[], cities: City[], setEvents: Function, setView: Function }
+    { events, setEvents, setView, setSearchTerm }:
+        { events: TechEvent[], setEvents: Function, setView: Function, setSearchTerm: Function }
 ) => {
 
     return (
-        <Form>
-            <Search events={events.slice()} setEvents={setEvents} setView={setView} />
-        </Form>
+        <Box pb={[3, 0]}>
+            <Form>
+                <Search
+                    events={events.slice()}
+                    setEvents={setEvents}
+                    setView={setView}
+                    setTerm={setSearchTerm} />
+            </Form>
+        </Box>
     )
 }
 

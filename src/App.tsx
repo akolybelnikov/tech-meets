@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import Events from './components/events/Events';
 import Search from './components/filters/Search';
+import Switch from './components/filters/Switch';
 import Header from './components/layout/Header';
 import Container from './components/shared/Container';
+import Flex from './components/shared/Flex';
 import Head from './components/utils/Head';
 import { City } from './models/City';
 import { TechEvent } from './models/Event';
 import { AppTheme } from './theme';
+import searchEvents from './helpers/fuse-search';
 
 const GlobalStyle = createGlobalStyle`
   body, html {
@@ -34,6 +37,8 @@ const App: React.FC = () => {
   const [subset, setSubset] = useState<string>('all')
   const [renderedEvents, setRenderedEvents] = useState<TechEvent[]>([])
   const [searchView, setView] = useState<boolean>(false)
+  const [onlyFree, setOnlyFree] = useState<boolean>(false)
+  const [searchTerm, setSearchTerm] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchData() {
@@ -65,7 +70,17 @@ const App: React.FC = () => {
     )
     setUserEvents(sorted)
     if (subset === 'my' && sorted.length) {
-      setRenderedEvents(sorted)
+      if (onlyFree) {
+        const freeSorted = sorted.filter((event: TechEvent) => event.isFree)
+        if (freeSorted.length) {
+          setRenderedEvents(freeSorted)
+        } else {
+          setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
+          setSubset('all')
+        }
+      } else {
+        setRenderedEvents(sorted)
+      }
     } else {
       setRenderedEvents(events)
       setSubset('all')
@@ -74,7 +89,59 @@ const App: React.FC = () => {
 
   const setCurrentSubset = (subset: string) => {
     setSubset(subset)
-    subset === 'all' ? setRenderedEvents(events) : setRenderedEvents(userEvents)
+    if (subset === 'all') {
+      if (searchTerm) {
+        const searchedEvents = searchEvents(searchTerm, events)
+        if (onlyFree) {
+          setRenderedEvents(searchedEvents.filter((event: TechEvent) => event.isFree))
+        } else {
+          setRenderedEvents(searchedEvents)
+        }
+      } else {
+        if (onlyFree) {
+          setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
+        } else {
+          setRenderedEvents(events)
+        }
+      }
+
+    } else {
+      if (searchTerm) {
+        const searchedEvents = searchEvents(searchTerm, userEvents)
+        if (onlyFree) {
+          setRenderedEvents(searchedEvents.filter((event: TechEvent) => event.isFree))
+        } else {
+          setRenderedEvents(searchedEvents)
+        }
+      } else {
+        if (onlyFree) {
+          setRenderedEvents(userEvents.filter((event: TechEvent) => event.isFree))
+        } else {
+          setRenderedEvents(userEvents)
+        }
+      }
+    }
+  }
+
+  const setFilteredEvents = (onlyFree: boolean) => {
+    setOnlyFree(onlyFree)
+
+    if (onlyFree) {
+      if (subset === 'my' && userEvents.length) {
+        setRenderedEvents(userEvents.filter((event: TechEvent) => event.isFree))
+      } else {
+        setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
+        setSubset('all')
+      }
+
+    } else {
+      if (subset === 'my' && userEvents.length) {
+        setRenderedEvents(userEvents)
+      } else {
+        setRenderedEvents(events)
+        setSubset('all')
+      }
+    }
   }
 
   return (
@@ -83,12 +150,15 @@ const App: React.FC = () => {
         <Head />
         <GlobalStyle />
         <Header active={subset} setSubset={setCurrentSubset} setView={setView} />
-        <Container sx={{ margin: '0 auto' }} px={[1, 2, 3]} py={[5, 6]} width={['100%', '95%', '760px']}>
-          <Search
-            events={subset === 'all' ? events : userEvents}
-            cities={cities}
-            setEvents={setRenderedEvents}
-            setView={setView} />
+        <Container sx={{ margin: '0 auto' }} px={[1, 2, 3]} py={[6]} width={['100%', '95%', '760px']}>
+          <Flex px={[2]} sx={{ alignItems: ['flex-start', 'center'], justifyContent: ['space-around'], flexDirection: ['column', 'row'] }}>
+            <Search
+              events={subset === 'all' ? events : userEvents}
+              setEvents={setRenderedEvents}
+              setView={setView}
+              setSearchTerm={setSearchTerm} />
+            <Switch filterEvents={setFilteredEvents} />
+          </Flex>
           <Events
             searchView={searchView}
             events={renderedEvents}
