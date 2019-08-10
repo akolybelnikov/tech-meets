@@ -37,6 +37,16 @@ declare module 'styled-components' {
         '&:hover': object
         minWidth: string
       }
+      primaryLight: {
+        color: string
+        backgroundColor: string
+        cursor: string
+        border: string
+        borderRadius: number
+        fontWeight: number
+        '&:hover': object
+        '&:focus': object
+      }
       secondary: {
         color: string
         backgroundColor: string

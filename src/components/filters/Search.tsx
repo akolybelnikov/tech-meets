@@ -36,10 +36,10 @@ const Search = (
                 field="term"
                 style={{
                     border: `2px solid ${AppTheme.colors.darkGreen}`,
-                    padding: '.5rem', minWidth: '10rem'
+                    padding: '.5rem', minWidth: '14rem'
                 }}
                 onChange={onChange}
-                placeholder="Search events by name or city" />
+                placeholder="Search events by name / city" />
             <Button
                 ml={[2]}
                 py={[1]}

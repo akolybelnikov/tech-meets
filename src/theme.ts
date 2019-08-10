@@ -48,6 +48,22 @@ const AppTheme: DefaultTheme = {
       },
       minWidth: '7rem'
     },
+    primaryLight: {
+      color: '#fff',
+      backgroundColor: lightBlue,
+      cursor: 'pointer',
+      border: `2px solid ${lightBlue}`,
+      borderRadius: 0,
+      fontWeight: 700,
+      '&:hover': {
+        backgroundColor: darkBlue,
+        border: `2px solid ${darkBlue}`,
+      },
+      '&:focus': {
+        backgroundColor: darkBlue,
+        border: `2px solid ${darkBlue}`,
+      },
+    },
     secondary: {
       color: darkGreen,
       backgroundColor: 'transparent',

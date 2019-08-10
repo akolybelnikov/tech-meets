@@ -4,14 +4,15 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import Events from './components/events/Events';
 import Search from './components/filters/Search';
 import Switch from './components/filters/Switch';
+import ToggleButtonGroup from './components/filters/ToggleButtonGroup';
 import Header from './components/layout/Header';
 import Container from './components/shared/Container';
 import Flex from './components/shared/Flex';
 import Head from './components/utils/Head';
+import searchEvents from './helpers/fuse-search';
 import { City } from './models/City';
 import { TechEvent } from './models/Event';
 import { AppTheme } from './theme';
-import searchEvents from './helpers/fuse-search';
 
 const GlobalStyle = createGlobalStyle`
   body, html {
@@ -74,15 +75,16 @@ const App: React.FC = () => {
         const freeSorted = sorted.filter((event: TechEvent) => event.isFree)
         if (freeSorted.length) {
           setRenderedEvents(freeSorted)
-        } else {
-          setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
-          setSubset('all')
         }
       } else {
         setRenderedEvents(sorted)
       }
     } else {
-      setRenderedEvents(events)
+      if (onlyFree) {
+        setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
+      } else {
+        setRenderedEvents(events)
+      }
       setSubset('all')
     }
   }
@@ -129,19 +131,17 @@ const App: React.FC = () => {
     if (onlyFree) {
       if (subset === 'my' && userEvents.length) {
         setRenderedEvents(userEvents.filter((event: TechEvent) => event.isFree))
-      } else {
-        setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
-        setSubset('all')
       }
 
     } else {
       if (subset === 'my' && userEvents.length) {
         setRenderedEvents(userEvents)
-      } else {
-        setRenderedEvents(events)
-        setSubset('all')
       }
     }
+  }
+
+  const setTimeOfTheDay = (val: number[]) => {
+    console.log(val)
   }
 
   return (
@@ -159,6 +159,7 @@ const App: React.FC = () => {
               setSearchTerm={setSearchTerm} />
             <Switch filterEvents={setFilteredEvents} />
           </Flex>
+          <ToggleButtonGroup toggle={setTimeOfTheDay} />
           <Events
             searchView={searchView}
             events={renderedEvents}
