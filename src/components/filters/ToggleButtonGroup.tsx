@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
+import styled from 'styled-components';
+import { Hours } from '../../models/Hours';
+import { HoursRange, mapRangeToHours } from '../../models/Range';
+import { filtersService } from '../../services/filters.service';
 import Box from '../shared/Box';
 import Text from '../shared/Text';
-import styled from 'styled-components'
 
 const Button = styled(ToggleButton)`
     background-color: ${props => props.theme.colors.lightBlue};
@@ -18,22 +21,31 @@ const Button = styled(ToggleButton)`
     }
 `
 
-function Group({ toggle }: { toggle: Function }) {
-    const [value, setValue] = useState([1, 3]);
+function Group({ setEvents }: { setEvents: Function }) {
+    const [value, setValue] = useState(Array<number>());
 
     const handleChange = (val: number[]) => {
-        toggle(val)
         setValue(val)
+        setTimeOfTheDay(val)
+        setEvents()
+    }
+
+    const setTimeOfTheDay = (val: number[]): void => {
+        if (val.length || val.length !== 4) {
+            const hours: Hours[] = []
+            val.forEach(range => hours.push(mapRangeToHours(HoursRange[range])))
+            filtersService.setHours(hours)
+        }
     }
 
     return (
-        <Box>
+        <Box px={[1, 0]}>
             <Text py={[3]}>Filter events by the time of the day</Text>
             <ToggleButtonGroup type="checkbox" value={value} onChange={handleChange}>
                 <Button value={1}>6am - 12am</Button>
-                <Button value={2}>12am - 17pm</Button>
-                <Button value={3}>17pm - 21pm</Button>
-                <Button value={4}>21pm - 6am</Button>
+                <Button value={2}>12am - 5pm</Button>
+                <Button value={3}>5pm - 9pm</Button>
+                <Button value={4}>9pm - 6am</Button>
             </ToggleButtonGroup>
         </Box>
     )

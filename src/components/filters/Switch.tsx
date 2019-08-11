@@ -4,6 +4,7 @@ import { AppTheme } from '../../theme';
 import Text from '../shared/Text'
 import styled from 'styled-components'
 import Box from '../shared/Box';
+import { filtersService } from '../../services/filters.service';
 
 const Label = styled.label`
     display: flex;
@@ -15,7 +16,8 @@ const SwitchButton = ({ filterEvents }: { filterEvents: Function }) => {
 
     const handleChange = (checked: boolean) => {
         setChecked(checked)
-        filterEvents(checked)
+        filtersService.setIsFree(checked)
+        filterEvents()
     }
 
     return (

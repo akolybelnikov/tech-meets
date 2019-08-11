@@ -1,17 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Subscription } from 'rxjs';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 import Events from './components/events/Events';
-import Search from './components/filters/Search';
-import Switch from './components/filters/Switch';
-import ToggleButtonGroup from './components/filters/ToggleButtonGroup';
-import Header from './components/layout/Header';
+import Filters from './components/filters/Filters';
 import Container from './components/shared/Container';
-import Flex from './components/shared/Flex';
 import Head from './components/utils/Head';
-import searchEvents from './helpers/fuse-search';
 import { City } from './models/City';
 import { TechEvent } from './models/Event';
+import { $filteredEvents } from './services/filters.service';
 import { AppTheme } from './theme';
 
 const GlobalStyle = createGlobalStyle`
@@ -35,28 +32,25 @@ const App: React.FC = () => {
   const [events, setEvents] = useState<TechEvent[]>([])
   const [userEvents, setUserEvents] = useState<TechEvent[]>([])
   const [cities, setCities] = useState<City[]>([])
-  const [subset, setSubset] = useState<string>('all')
-  const [renderedEvents, setRenderedEvents] = useState<TechEvent[]>([])
   const [searchView, setView] = useState<boolean>(false)
-  const [onlyFree, setOnlyFree] = useState<boolean>(false)
-  const [searchTerm, setSearchTerm] = useState<string | null>(null)
+  const [filteredEvents, setFilteredEvents] = useState<TechEvent[]>([])
 
   useEffect(() => {
     async function fetchData() {
       const cities: AxiosResponse = await axios('http://localhost:3001/cities')
       setCities(cities.data)
 
-      const result: AxiosResponse = await axios('http://localhost:3001/events')
-      setEvents(result.data.sort(
+      const events: AxiosResponse = await axios('http://localhost:3001/events')
+      setEvents(events.data.sort(
         (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
       ))
 
-      const userResult: AxiosResponse = await axios('http://localhost:3001/user')
-      setUserEvents(userResult.data.sort(
+      const user: AxiosResponse = await axios('http://localhost:3001/user')
+      setUserEvents(user.data.sort(
         (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
       ))
 
-      setRenderedEvents(result.data.sort(
+      setFilteredEvents(events.data.sort(
         (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
       ))
     }
@@ -64,84 +58,22 @@ const App: React.FC = () => {
     fetchData()
   }, [])
 
-  const reFetchUserEvents = async () => {
-    const userResult: AxiosResponse = await axios('http://localhost:3001/user')
-    const sorted = userResult.data.sort(
+  useEffect(() => {
+    const filtersSubscription: Subscription = $filteredEvents.subscribe(
+      curr => setFilteredEvents(curr)
+    )
+
+    return () => {
+      filtersSubscription.unsubscribe()
+    }
+  }, [])
+
+  const fetchUserEvents = async () => {
+    const user: AxiosResponse = await axios('http://localhost:3001/user')
+    const sorted = user.data.sort(
       (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
     )
     setUserEvents(sorted)
-    if (subset === 'my' && sorted.length) {
-      if (onlyFree) {
-        const freeSorted = sorted.filter((event: TechEvent) => event.isFree)
-        if (freeSorted.length) {
-          setRenderedEvents(freeSorted)
-        }
-      } else {
-        setRenderedEvents(sorted)
-      }
-    } else {
-      if (onlyFree) {
-        setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
-      } else {
-        setRenderedEvents(events)
-      }
-      setSubset('all')
-    }
-  }
-
-  const setCurrentSubset = (subset: string) => {
-    setSubset(subset)
-    if (subset === 'all') {
-      if (searchTerm) {
-        const searchedEvents = searchEvents(searchTerm, events)
-        if (onlyFree) {
-          setRenderedEvents(searchedEvents.filter((event: TechEvent) => event.isFree))
-        } else {
-          setRenderedEvents(searchedEvents)
-        }
-      } else {
-        if (onlyFree) {
-          setRenderedEvents(events.filter((event: TechEvent) => event.isFree))
-        } else {
-          setRenderedEvents(events)
-        }
-      }
-
-    } else {
-      if (searchTerm) {
-        const searchedEvents = searchEvents(searchTerm, userEvents)
-        if (onlyFree) {
-          setRenderedEvents(searchedEvents.filter((event: TechEvent) => event.isFree))
-        } else {
-          setRenderedEvents(searchedEvents)
-        }
-      } else {
-        if (onlyFree) {
-          setRenderedEvents(userEvents.filter((event: TechEvent) => event.isFree))
-        } else {
-          setRenderedEvents(userEvents)
-        }
-      }
-    }
-  }
-
-  const setFilteredEvents = (onlyFree: boolean) => {
-    setOnlyFree(onlyFree)
-
-    if (onlyFree) {
-      if (subset === 'my' && userEvents.length) {
-        setRenderedEvents(userEvents.filter((event: TechEvent) => event.isFree))
-      }
-
-    } else {
-      if (subset === 'my' && userEvents.length) {
-        setRenderedEvents(userEvents)
-      }
-    }
-  }
-
-  const setTimeOfTheDay = (val: number[]) => {
-    console.log(val)
   }
 
   return (
@@ -149,23 +81,20 @@ const App: React.FC = () => {
       <Container>
         <Head />
         <GlobalStyle />
-        <Header active={subset} setSubset={setCurrentSubset} setView={setView} />
-        <Container sx={{ margin: '0 auto' }} px={[1, 2, 3]} py={[6]} width={['100%', '95%', '760px']}>
-          <Flex px={[2]} sx={{ alignItems: ['flex-start', 'center'], justifyContent: ['space-around'], flexDirection: ['column', 'row'] }}>
-            <Search
-              events={subset === 'all' ? events : userEvents}
-              setEvents={setRenderedEvents}
-              setView={setView}
-              setSearchTerm={setSearchTerm} />
-            <Switch filterEvents={setFilteredEvents} />
-          </Flex>
-          <ToggleButtonGroup toggle={setTimeOfTheDay} />
+        <Container sx={{ margin: '0 auto' }} px={[2, 3]} pt={['5.5rem', 6]} width={['100%', '95%', '760px']}>
+          <Filters
+            events={events}
+            userEvents={userEvents}
+            setView={setView}
+          />
+        </Container>
+        <Container sx={{ margin: '0 auto' }} px={[1, 2, 3]} py={[1]} width={['100%', '95%', '760px']}>
           <Events
             searchView={searchView}
-            events={renderedEvents}
+            events={filteredEvents}
             cities={cities}
             userEvents={userEvents}
-            fetchUserEvents={reFetchUserEvents} />
+            fetchUserEvents={fetchUserEvents} />
         </Container>
       </Container>
     </ThemeProvider>

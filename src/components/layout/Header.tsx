@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Flex as RebassFlex } from 'rebass';
 import styled, { DefaultTheme, withTheme } from 'styled-components';
 import Logo from '../shared/Logo';
 import SubTitle from '../shared/SubTitle';
-
+import { filtersService } from '../../services/filters.service';
 
 const Flex = (props: any) => (
     <RebassFlex {...props} />
@@ -13,7 +13,9 @@ const HeaderContainer = styled(Flex).attrs({})`
     background: #fff;
     box-shadow: 0 1px 5px ${props => props.theme.colors.orange};
     width: 100%;
-    position: fixed;
+    position: absolute;
+    top: 0;
+    left: 0;
     z-index: 100;
 `
 
@@ -30,21 +32,28 @@ const Button = styled(SubTitle)`
 `
 
 const Header = (
-    { theme, setSubset, active, setView }:
-        { theme: DefaultTheme, setSubset: Function, active: string, setView: Function }
+    { theme, setSubset, setView }:
+        { theme: DefaultTheme, setSubset: Function, setView: Function }
 ) => {
+    const [active, setActive] = useState('all')
 
     const setAllActive = () => {
-        setSubset('all')
+        filtersService.setView('all')
+        setActive('all')
+        setSubset()
         setView(false)
+        
     }
     const setMyActive = () => {
-        setSubset('my')
+        filtersService.setView('my')
+        setActive('my')
+        setSubset()
         setView(false)
+        
     }
 
     return (
-        <HeaderContainer py={3}>
+        <HeaderContainer py={[3,2]}>
             <Flex sx={{ justifyContent: 'center', flex: ['15%'] }}>
                 <Logo />
             </Flex>

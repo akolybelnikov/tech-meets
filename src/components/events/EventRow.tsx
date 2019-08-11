@@ -66,7 +66,7 @@ export default (
     <Fragment>
       <FlexRow style={{ zIndex: 1 }}>
         <Box p={[1, 2]} sx={{ flex: ['15%', '10%'] }}>
-          {startDate && <Moment format="HH:mm">
+          {startDate && <Moment utc format="HH:mm">
             {startDate}
           </Moment>}
         </Box>

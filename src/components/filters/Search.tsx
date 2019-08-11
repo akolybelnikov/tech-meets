@@ -1,33 +1,24 @@
 import { Form, FormApi, Text as Input, useFormApi, useFormState } from 'informed';
 import React from 'react';
-import searchEvents from '../../helpers/fuse-search';
-import { TechEvent } from '../../models/Event';
+import { filtersService } from '../../services/filters.service';
 import { AppTheme } from '../../theme';
 import Box from "../shared/Box";
 import Button from '../shared/Buttons';
 import Flex from '../shared/Flex';
 
-const Search = (
-    { events, setEvents, setView, setTerm }:
-        { events: any[], setEvents: Function, setView: Function, setTerm: Function }
-) => {
-    const formApi = useFormApi<FormApi>();
+const Search = ({ setEvents }: { setEvents: Function }) => {
+    const formApi = useFormApi<FormApi>()
     const { values: field } = useFormState()
 
-    const onChange = () => {
-        if (field.term) {
-            const results: TechEvent[] = searchEvents(field.term, events)
-            setEvents(results)
-            setView(true)
-            setTerm(field.term)
-        }
+    const handleInput = () => {
+        filtersService.setSearchTerm(field.term)
+        setEvents()
     }
 
     const onClearInput = () => {
         formApi.reset()
-        setEvents(events)
-        setView(false)
-        setTerm(null)
+        filtersService.setSearchTerm('')
+        setEvents()
     }
 
     return (
@@ -38,7 +29,8 @@ const Search = (
                     border: `2px solid ${AppTheme.colors.darkGreen}`,
                     padding: '.5rem', minWidth: '14rem'
                 }}
-                onChange={onChange}
+                onChange={handleInput}
+                onBlur={handleInput}
                 placeholder="Search events by name / city" />
             <Button
                 ml={[2]}
@@ -52,23 +44,11 @@ const Search = (
     )
 }
 
-const SearchForm = (
-    { events, setEvents, setView, setSearchTerm }:
-        { events: TechEvent[], setEvents: Function, setView: Function, setSearchTerm: Function }
-) => {
-
-    return (
-        <Box pb={[3, 0]}>
-            <Form>
-                <Search
-                    events={events.slice()}
-                    setEvents={setEvents}
-                    setView={setView}
-                    setTerm={setSearchTerm} />
-            </Form>
-        </Box>
-    )
-}
+const SearchForm = ({ setEvents }: { setEvents: Function }) => (<Box pb={[3, 0]}>
+    <Form>
+        <Search setEvents={setEvents} />
+    </Form>
+</Box>)
 
 
 export default SearchForm

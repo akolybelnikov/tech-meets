@@ -29,6 +29,7 @@
     "react-scripts": "3.0.1",
     "react-switch": "^5.0.1",
     "rebass": "^4.0.1",
+    "rxjs": "^6.5.2",
     "styled-components": "^4.3.2",
     "typescript": "3.5.3"
   },
