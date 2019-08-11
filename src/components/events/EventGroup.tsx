@@ -36,29 +36,30 @@ const EventCard = styled(Card)`
 `
 
 export default (
-  { eventGroup, userEvents, fetchUserEvents }:
-    { eventGroup: EventGroup, userEvents: TechEvent[], fetchUserEvents: Function }) => {
+  { eventGroup, userEvents, fetchUserEvents, leaveEvent }:
+    { eventGroup: EventGroup, userEvents: TechEvent[], fetchUserEvents: Function, leaveEvent: Function }) => {
   const { date, events } = eventGroup
 
   return (
     <FlexContainer width={['95%', '100%']} m={'0 auto'}>
       {date && <Text><Moment format="dddd Do MMMM">{date}</Moment></Text>}
-      <EventCard mt={[2, 3]} mb={[3, 4]}>
-        {events && events.map((event, idx) => {
+      {events && <EventCard mt={[2, 3]} mb={[3, 4]}>
+        {events.map((event: TechEvent, idx: number) => {
           const joined = (userEvents.findIndex(joinedEvent => joinedEvent.id === event.id) !== -1)
 
           return (
             <Fragment key={idx}>
-                <EventRow
-                  event={event}
-                  joined={joined}
-                  fetchUserEvents={fetchUserEvents}
-                />
+              <EventRow
+                event={event}
+                joined={joined}
+                fetchUserEvents={fetchUserEvents}
+                leaveEvent={leaveEvent}
+              />
               {(idx < events.length - 1) && <Divider />}
             </Fragment>
           )
         })}
-      </EventCard>
+      </EventCard>}
     </FlexContainer>
   )
 }

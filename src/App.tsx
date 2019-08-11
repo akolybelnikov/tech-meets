@@ -6,9 +6,10 @@ import Events from './components/events/Events';
 import Filters from './components/filters/Filters';
 import Container from './components/shared/Container';
 import Head from './components/utils/Head';
+import applyFilters from './helpers/apply-filters';
 import { City } from './models/City';
 import { TechEvent } from './models/Event';
-import { $filteredEvents } from './services/filters.service';
+import { $filteredEvents, $filters, filtersService } from './services/filters.service';
 import { AppTheme } from './theme';
 
 const GlobalStyle = createGlobalStyle`
@@ -70,10 +71,30 @@ const App: React.FC = () => {
 
   const fetchUserEvents = async () => {
     const user: AxiosResponse = await axios('http://localhost:3001/user')
-    const sorted = user.data.sort(
-      (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
-    )
-    setUserEvents(sorted)
+      const sorted = user.data.sort(
+        (a: TechEvent, b: TechEvent) => (a.startDate > b.startDate) ? 1 : -1
+      )
+      setUserEvents(sorted)
+      setView(false)
+
+      const filtersSubscription: Subscription = $filters.subscribe((curr) => {
+        let filteredEvents: TechEvent[]
+        if (curr.view === 'my') {
+          filteredEvents = applyFilters(sorted, curr)
+          filtersService.setEvents(filteredEvents)
+        }
+      })
+
+      filtersSubscription.unsubscribe()
+  }
+
+  const leaveEvent = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:3001/user/${id}`)   
+      fetchUserEvents()
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   return (
@@ -94,7 +115,8 @@ const App: React.FC = () => {
             events={filteredEvents}
             cities={cities}
             userEvents={userEvents}
-            fetchUserEvents={fetchUserEvents} />
+            fetchUserEvents={fetchUserEvents}
+            leaveEvent={leaveEvent} />
         </Container>
       </Container>
     </ThemeProvider>

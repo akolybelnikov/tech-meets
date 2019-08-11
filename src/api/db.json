@@ -243,15 +243,5 @@
       "endDate": "2019-09-16T23:15:00+00:00"
     }
   ],
-  "user": [
-    {
-      "id": 1,
-      "isFree": true,
-      "name": "Git Deep: A look at some of Git's powerful, underused features",
-      "city": 1,
-      "startDate": "2019-06-09T21:30:00+00:00",
-      "endDate": "2019-06-09T23:50:00+00:00",
-      "cityName": "Barcelona"
-    }
-  ]
+  "user": []
 }

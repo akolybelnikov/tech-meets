@@ -16,8 +16,8 @@ import Title from '../shared/Title';
 import customStyles from './events.module.scss';
 
 export default (
-  { event, joined, fetchUserEvents }:
-    { event: TechEvent, joined: boolean, fetchUserEvents: Function }) => {
+  { event, joined, fetchUserEvents, leaveEvent }:
+    { event: TechEvent, joined: boolean, fetchUserEvents: Function, leaveEvent: Function }) => {
   const [open, setModal] = useState(false)
   const [cancel, setCancel] = useState(false)
   const { startDate, name, isFree, endDate } = event
@@ -52,14 +52,9 @@ export default (
     }
   }
 
-  const onLeaveEvent = async () => {
-    try {
-      await axios.delete(`http://localhost:3001/user/${event.id}`)
-      await fetchUserEvents()
-      setModal(false)
-    } catch (e) {
-      setModal(false)
-    }
+  const onLeaveEvent = () => {
+    leaveEvent(event.id)
+    setModal(false)
   }
 
   return (

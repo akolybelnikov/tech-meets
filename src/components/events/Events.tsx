@@ -8,13 +8,14 @@ import SubTitle from '../shared/SubTitle';
 import EventCard from './EventGroup';
 
 export default (
-    { events, cities, userEvents, fetchUserEvents, searchView }:
+    { events, cities, userEvents, fetchUserEvents, searchView, leaveEvent }:
         {
             events: TechEvent[],
             cities: City[],
             userEvents: TechEvent[],
             fetchUserEvents: Function,
-            searchView: boolean
+            searchView: boolean,
+            leaveEvent: Function
         }) => {
 
     const groups = events.reduce((groups: EventGroup[], curr: TechEvent): EventGroup[] => {
@@ -39,7 +40,8 @@ export default (
                 key={idx}
                 eventGroup={group}
                 userEvents={userEvents}
-                fetchUserEvents={fetchUserEvents} />
+                fetchUserEvents={fetchUserEvents}
+                leaveEvent={leaveEvent} />
         )
         )}
 
