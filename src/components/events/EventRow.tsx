@@ -27,13 +27,9 @@ export default (
     return rest !== 0 ? `${hours}h ${rest}m` : `${hours}h`
   }
 
-  const onOpenModal = () => {
-    setModal(true)
-  };
+  const onOpenModal = () => setModal(true)
 
-  const onCloseModal = () => {
-    setModal(false)
-  };
+  const onCloseModal = () => setModal(false)
 
   const onJoinEvent = async () => {
     try {

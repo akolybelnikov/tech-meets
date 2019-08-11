@@ -38,7 +38,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-api": "json-server --watch src/api/db.json --port 3001"
+    "start-api": "json-server --watch src/api/db.json --port 3001 --id id"
   },
   "eslintConfig": {
     "extends": "react-app"
