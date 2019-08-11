@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import ToggleButton from 'react-bootstrap/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import styled from 'styled-components';
@@ -21,8 +21,16 @@ const Button = styled(ToggleButton)`
     }
 `
 
-function Group({ setEvents }: { setEvents: Function }) {
+const Group = forwardRef(({ setEvents }: { setEvents: Function }, ref) => {
     const [value, setValue] = useState(Array<number>());
+
+    useImperativeHandle(ref, () => ({
+        reset() {
+            setValue([])
+            setTimeOfTheDay([])
+            setEvents()
+        }
+    }))
 
     const handleChange = (val: number[]) => {
         setValue(val)
@@ -49,6 +57,6 @@ function Group({ setEvents }: { setEvents: Function }) {
             </ToggleButtonGroup>
         </Box>
     )
-}
+})
 
 export default Group

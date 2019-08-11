@@ -1,12 +1,12 @@
 import { Form, FormApi, Text as Input, useFormApi, useFormState } from 'informed';
-import React from 'react';
+import React, { forwardRef, MutableRefObject, useImperativeHandle, useRef } from 'react';
 import { filtersService } from '../../services/filters.service';
 import { AppTheme } from '../../theme';
 import Box from "../shared/Box";
 import Button from '../shared/Buttons';
 import Flex from '../shared/Flex';
 
-const Search = ({ setEvents }: { setEvents: Function }) => {
+const Search = forwardRef(({ setEvents }: { setEvents: Function }, ref) => {
     const formApi = useFormApi<FormApi>()
     const { values: field } = useFormState()
 
@@ -20,6 +20,12 @@ const Search = ({ setEvents }: { setEvents: Function }) => {
         filtersService.setSearchTerm('')
         setEvents()
     }
+
+    useImperativeHandle(ref, () => ({
+        reset() {
+            onClearInput()
+        }
+    }))
 
     return (
         <Flex>
@@ -42,13 +48,23 @@ const Search = ({ setEvents }: { setEvents: Function }) => {
                 </Button>
         </Flex>
     )
-}
+})
 
-const SearchForm = ({ setEvents }: { setEvents: Function }) => (<Box pb={[3, 0]}>
-    <Form>
-        <Search setEvents={setEvents} />
-    </Form>
-</Box>)
+const SearchForm = forwardRef(({ setEvents }: { setEvents: Function }, ref) => {
+    const inputRef: MutableRefObject<any> = useRef()
+
+    useImperativeHandle(ref, () => ({
+        reset() {
+            inputRef.current.reset()
+        }
+    }))
+
+    return (<Box pb={[3, 0]}>
+        <Form>
+            <Search ref={inputRef} setEvents={setEvents} />
+        </Form>
+    </Box>)
+})
 
 
 export default SearchForm

@@ -79,7 +79,7 @@ const AppTheme: DefaultTheme = {
       color: '#fff',
       backgroundColor: darkGreen,
       cursor: 'pointer',
-      border: `2px solid ${darkBlue}`,
+      border: `2px solid ${darkGreen}`,
       borderRadius: 0,
       '&:hover': {
         color: darkGreen,

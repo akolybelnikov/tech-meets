@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,forwardRef, useImperativeHandle } from 'react';
 import Switch from "react-switch";
 import { AppTheme } from '../../theme';
 import Text from '../shared/Text'
@@ -11,7 +11,7 @@ const Label = styled.label`
     align-items: center;
 `
 
-const SwitchButton = ({ filterEvents }: { filterEvents: Function }) => {
+const SwitchButton = forwardRef(({ filterEvents }: { filterEvents: Function }, ref) => {
     const [checked, setChecked] = useState(false)
 
     const handleChange = (checked: boolean) => {
@@ -19,6 +19,14 @@ const SwitchButton = ({ filterEvents }: { filterEvents: Function }) => {
         filtersService.setIsFree(checked)
         filterEvents()
     }
+
+    useImperativeHandle(ref, () => ({
+        reset() {
+            setChecked(false)
+            filtersService.setIsFree(false)
+            filterEvents()
+        }
+    }))
 
     return (
         <Box py={[2]} px={[1]}>
@@ -45,6 +53,6 @@ const SwitchButton = ({ filterEvents }: { filterEvents: Function }) => {
             </Label>
         </Box>
     )
-}
+})
 
 export default SwitchButton

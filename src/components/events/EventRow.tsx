@@ -19,7 +19,6 @@ export default (
   { event, joined, fetchUserEvents, leaveEvent }:
     { event: TechEvent, joined: boolean, fetchUserEvents: Function, leaveEvent: Function }) => {
   const [open, setModal] = useState(false)
-  const [cancel, setCancel] = useState(false)
   const { startDate, name, isFree, endDate } = event
 
   const formatDuration = (minutes: number): string => {
@@ -28,18 +27,12 @@ export default (
     return rest !== 0 ? `${hours}h ${rest}m` : `${hours}h`
   }
 
-  const onOpenJoinModal = () => {
-    setCancel(false)
+  const onOpenModal = () => {
     setModal(true)
   };
 
   const onCloseModal = () => {
     setModal(false)
-  };
-
-  const onOpenLeaveModal = () => {
-    setCancel(true)
-    setModal(true)
   };
 
   const onJoinEvent = async () => {
@@ -54,7 +47,6 @@ export default (
 
   const onLeaveEvent = () => {
     leaveEvent(event.id)
-    setModal(false)
   }
 
   return (
@@ -98,12 +90,12 @@ export default (
           alignItems: ['center']
         }}>
           {!joined &&
-            <Button variant='primaryInverted' onClick={onOpenJoinModal}>
+            <Button variant='primaryInverted' onClick={onOpenModal}>
               Sign up
             </Button>
           }
           {joined &&
-            <Button variant='primary' onClick={onOpenLeaveModal}>
+            <Button variant='primary' onClick={onLeaveEvent}>
               Leave
             </Button>
           }
@@ -130,21 +122,19 @@ export default (
               justifyContent: 'center',
               background: 'lightGreen'
             }}>
-            {!cancel && <Title>Join the event</Title>}
-            {cancel && <Title>Leave the event</Title>}
+            <Title>Join the event</Title>
           </Flex>
           <FlexContainer minHeight={'35vh'} p={[2, 3, 4]}>
             <SubTitle style={{ display: 'inline-block' }}>
-              {!cancel && `You are about to sign up for `}
-              {cancel && `You are about to leave `}
+              {`You are about to sign up for `}
             </SubTitle>
             <SubTitle style={{ display: 'inline-block' }} color="orange">
               {name}
             </SubTitle>
             <SubTitle style={{ display: 'inline-block' }}>
-              {!cancel && ` This event takes place on the `}
-              {!cancel && <Moment format="Do MMMM">{startDate}</Moment>}
-              {!cancel && ` in ${event.cityName}.`}<br /><br />Are you sure?
+              {` This event takes place on the `}
+              {startDate && <Moment format="Do MMMM">{startDate}</Moment>}
+              {` in ${event.cityName}.`}<br /><br />Are you sure?
             </SubTitle>
           </FlexContainer>
           <Flex py={[3]} sx={{ justifyContent: 'flex-end' }}>
@@ -157,22 +147,12 @@ export default (
                 </Button>
             </Box>
             <Box sx={{ flex: ['30% 0 0', '25% 0 0'], textAlign: 'center' }}>
-              {!cancel &&
-                <Button
-                  minWidth={[84]}
-                  variant='secondaryInverted'
-                  onClick={onJoinEvent}>
-                  Join
+              <Button
+                minWidth={[84]}
+                variant='secondaryInverted'
+                onClick={onJoinEvent}>
+                Join
                 </Button>
-              }
-              {cancel &&
-                <Button
-                  minWidth={[84]}
-                  variant='warningInverted'
-                  onClick={onLeaveEvent}>
-                  Leave
-                </Button>
-              }
             </Box>
           </Flex>
         </Card>
